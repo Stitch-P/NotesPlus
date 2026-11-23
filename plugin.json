@@ -4,7 +4,7 @@
   "hasRibbonIcon": true,
   "hasSettingsIcon": true,
   "requiredDependencies": {
-    "prettyui": "prettyui"
+    "prettyui": 6398181
   },
   "requiredPermissions": ["trackingAccess", "chatAccess"],
   "optionalPermissions": [],
