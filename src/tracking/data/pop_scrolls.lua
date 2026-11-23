@@ -1,0 +1,41 @@
+-- Player-owned ports scrolls: scroll n is complete once POP_SCROLL_<n>_PIECES reaches 4 (all four pieces found). Rows are
+-- { name, what it unlocks, icon (enum pop_voyage_scroll_icons), part of "Scrolling in the Deep" }, in the game's order
+-- (enum pop_unlockable_scroll_discriptions). Scrolls 16 and 17 have no icon of their own, so they use the melee one.
+local SCROLLS = {
+    { "Log-splitting", "Chance to split a log as you chop it, converting the log into additional woodcutting experience.", 15701, true },
+    { "Rock-crushing", "+2% or +3% critical chance when mining.", 15701, true },
+    { "Tree-shaking", "Additional birds' nests drop from trees; occasionally implings too.", 15701, true },
+    { "Gem-finding", "+2% or +3% geode chance when mining.", 15701, true },
+    { "Vampyrism", "Steal life from enemies with every melee hit.", 15701, true },
+    { "Attack", "+2/4% hit chance with melee attacks.", 15701, true },
+    { "Elements", "Adds extra elemental damage to every magic hit.", 15701, true },
+    { "Magic", "+2/4% hit chance with magic attacks.", 15701, true },
+    { "Cruelty", "Adds extra damage to every ranged hit.", 15701, true },
+    { "Ranging", "+2/4% hit chance with ranged attacks.", 15701, true },
+    { "Shark Soup", "Heals 2300 Life Points.", 15702, false },
+    { "Eastern soups", "Heals for more life points than their base ingredient, up to 115% of maximum.", 15702, true },
+    { "Tetsu helm", "Level 85 melee helm.", 15703, true },
+    { "Tetsu body", "Level 85 melee body.", 15703, true },
+    { "Tetsu platelegs", "Level 85 melee legs.", 15703, true },
+    { "Tetsu gauntlets", "Level 84/85 melee gloves.", 15703, false },
+    { "Tetsu dabatons", "Level 84/85 melee boots.", 15703, false },
+    { "Death Lotus hood", "Level 85 ranged helm.", 15704, true },
+    { "Death Lotus chestplate", "Level 85 ranged body.", 15704, true },
+    { "Death Lotus chaps", "Level 85 ranged legs.", 15704, true },
+    { "Death Lotus gloves", "Level 84/85 ranged gloves.", 15704, false },
+    { "Death Lotus boots", "Level 84/85 ranged boots.", 15704, false },
+    { "Seasinger's hood", "Level 85 magic helm.", 15705, true },
+    { "Seasinger's robe top", "Level 85 magic body.", 15705, true },
+    { "Seasinger's robe bottom", "Level 85 magic legs.", 15705, true },
+    { "Seasinger's gloves", "Level 84/85 magic gloves.", 15705, false },
+    { "Seasinger's shoes", "Level 84/85 magic boots.", 15705, false },
+    { "Leviathan ring", "Level 85 defensive ring.", 15702, true },
+    { "Reefwalker's cape", "Level 85 defensive cape.", 15702, true },
+    { "Death Lotus darts", "Level 85 ranged weapons.", 15704, true },
+    { "Tetsu swords", "Level 85 melee weapons.", 15703, true },
+    { "Seasinger wand/orb", "Level 85 magic weapons.", 15705, true },
+    { "Whopper-baiting", "Imparts a chance to throwback a fish as you catch it, converting the fish into additional Fishing experience.", 15701, true },
+    { "Casket-salvaging", "Imparts a chance to salvage various caskets from the depth while fishing.", 15701, true },
+}
+
+return { SCROLLS = SCROLLS, PIECES = 4, VAR = function(n) return "POP_SCROLL_" .. n .. "_PIECES" end }

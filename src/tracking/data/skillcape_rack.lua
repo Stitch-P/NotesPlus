@@ -1,0 +1,36 @@
+-- The Skillcape Rack in Anachronia's base camp stores a cape by the game's skillcape number (skillcape_to_int), and you
+-- gain that cape's perk. Number -> { skill name, cape item (untrimmed), perk }, from skillcape_perks_int_to_struct.
+local CAPES = {
+    [1] = { "Attack", 9747, "Provides a chance to not degrade various items whilst in combat." },
+    [2] = { "Strength", 9750, "Dismember deals an additional 3 hits of damage." },
+    [3] = { "Ranged", 9756, "Increases your ranged ammunition special effect chance by 20% of its current chance." },
+    [4] = { "Magic", 9762, "Provides the ability to spellbook swap at banks." },
+    [5] = { "Defence", 9753, "Provides the effects of a portent of life whilst it is not on cooldown." },
+    [6] = { "Constitution", 9768, "Provides double base health regeneration." },
+    [7] = { "Prayer", 9759, "Offering bones in a player-owned house will act as having 2 burners always being lit." },
+    [8] = { "Agility", 9771, "Prevents you from failing any obstacle." },
+    [9] = { "Herblore", 9774, "Instantly clean all grimy herbs in your inventory. No experience will be gained for doing this." },
+    [10] = { "Thieving", 9777, "All items received from pickpocketing will be noted." },
+    [11] = { "Crafting", 9780, "Provides the ability to never require thread when crafting and a chance to cut all gems of the same type in your inventory at once." },
+    [12] = { "Runecrafting", 9765, "Provides a chance to act as an anima stone whilst Runecrafting." },
+    [13] = { "Mining", 9792, "Provides +5% double ore chance on all core rocks, and whenever your roll to get more ore from a core ore succeeds, you get bonus XP equal to the level requirement of the rock." },
+    [14] = { "Smithing", 9795, "Whenever you reheat your unfinished smithing item, your next strike generates 5 additional progress. This works with the autoheater and superheat item spell." },
+    [15] = { "Fishing", 9798, "Provides a chance to gain an additional catch." },
+    [16] = { "Cooking", 9801, "You will be unable to burn food whilst cooking." },
+    [17] = { "Firemaking", 9804, "Acts as a light source and fire spirits give better rewards." },
+    [18] = { "Woodcutting", 9807, "Provides an increased chance of receiving a bird's nest or crystal geode." },
+    [19] = { "Fletching", 9783, "Provides a chance to make extra bolts, arrows and darts." },
+    [20] = { "Slayer", 9786, "Provides the ability to teleport to available Slayer masters." },
+    [21] = { "Farming", 9810, "Provides a chance to instantly harvest all resources from a crop." },
+    [22] = { "Construction", 9789, "Provides a 5% chance to save planks when constructing furniture." },
+    [23] = { "Hunter", 9948, "Allows you to place your next box, marasamaw or tortle trap in the next cycle." },
+    [24] = { "Summoning", 12169, "Provides a chance to not consume a charm when infusing pouches." },
+    [25] = { "Dungeoneering", 15706, "Provides teleports to available resource dungeons." },
+    [26] = { "Divination", 29185, "Increases duration of Divination springs by 30 seconds (once per spring)." },
+    [27] = { "Invention", 36351, "Provides bonus charge drain rate reduction." },
+    [28] = { "Archaeology", 49396, "Provides extra sprite focus and the ability to modify relic powers at banks." },
+    [29] = { "Necromancy", 55203, "Provides the effect of an alteration glyph during rituals." },
+    [31] = { "Quest", 9813, "Extended duration in the Tears of Guthix minigame.<br>Provides teleports to locations around Gielinor." },
+}
+
+return { CAPES = CAPES }

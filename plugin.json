@@ -1,0 +1,12 @@
+{
+  "name": "Notes-Plus",
+  "version": "1.0",
+  "hasRibbonIcon": true,
+  "hasSettingsIcon": true,
+  "requiredDependencies": {
+    "prettyui": "prettyui"
+  },
+  "requiredPermissions": ["trackingAccess", "chatAccess"],
+  "optionalPermissions": [],
+  "contactEmailAddress": "pavyrs626@gmail.com"
+}

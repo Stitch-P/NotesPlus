@@ -1,0 +1,43 @@
+-- Ports (Player-owned Ports). POP_EXPLORED is a BIG boy Variable, so let's be as precise as possible.
+local EXPLORED_VAR = "POP_EXPLORED"
+
+local REGIONS = {
+    { "The Skull", 0, 4999, "AIF_POP_CARGO_ICONS_34X34_4" },
+    { "The Hook", 5000, 39999, "AIF_POP_CARGO_ICONS_34X34_2" },
+    { "The Scythe", 40000, 139999, "AIF_POP_CARGO_ICONS_34X34_5" },
+    { "The Bowl", 140000, 449999, "AIF_POP_CARGO_ICONS_34X34_6" },
+    { "The Pincers", 450000, 1199999, "AIF_POP_CARGO_ICONS_34X34_3" },
+    { "The Loop", 1200000, 2299999, "AIF_POP_EXP_CARGO_ICONS_34X34_37" },
+    { "The Shield", 2300000, 4099999, "AIF_POP_EXP_CARGO_ICONS_34X34_38" },
+}
+
+-- Trade goods you collect from voyages.
+local TRADE_GOODS = {
+    { "Ancient bones", "POP_REWARD_RESOURCE_1", "AIF_POP_EXP_CARGO_ICONS_34X34_7" },
+    { "Plate", "POP_REWARD_RESOURCE_2", "AIF_POP_EXP_CARGO_ICONS_34X34_8" },
+    { "Spices", "POP_REWARD_RESOURCE_3", "AIF_POP_EXP_CARGO_ICONS_34X34_9" },
+    { "Lacquer", "POP_REWARD_RESOURCE_4", "AIF_POP_EXP_CARGO_ICONS_34X34_10" },
+    { "Chi", "POP_REWARD_RESOURCE_5", "AIF_POP_EXP_CARGO_ICONS_34X34_11" },
+    { "Eastern pearls", "POP_REWARD_RESOURCE_6", "AIF_POP_EXP_CARGO_ICONS_34X34_36" },
+    { "Koi scales", "POP_REWARD_RESOURCE_7", "AIF_POP_EXP_CARGO_ICONS_34X34_35" },
+}
+ 
+-- Resources from Ports voyages.
+local PORT_RESOURCES = {
+    { "Chimes", "POP_PORT_RESOURCE_1", "AIF_POP_CARGO_ICONS_34X34_0" },
+    { "Bamboo", "POP_PORT_RESOURCE_2", "AIF_POP_CARGO_ICONS_34X34_1" },
+    { "Gunpowder", "POP_PORT_RESOURCE_3", "AIF_POP_CARGO_ICONS_34X34_4" },
+    { "Black slate", "POP_PORT_RESOURCE_4", "AIF_POP_CARGO_ICONS_34X34_2" },
+    { "Cherrywood", "POP_PORT_RESOURCE_5", "AIF_POP_CARGO_ICONS_34X34_5" },
+    { "Jade", "POP_PORT_RESOURCE_6", "AIF_POP_CARGO_ICONS_34X34_6" },
+    { "Stainless steel", "POP_PORT_RESOURCE_7", "AIF_POP_CARGO_ICONS_34X34_3" },
+    { "Terracotta", "POP_PORT_RESOURCE_8", "AIF_POP_EXP_CARGO_ICONS_34X34_37" },
+    { "Azure", "POP_PORT_RESOURCE_9", "AIF_POP_EXP_CARGO_ICONS_34X34_38" },
+}
+ 
+return {
+    EXPLORED_VAR = EXPLORED_VAR,
+    REGIONS = REGIONS,
+    TRADE_GOODS = TRADE_GOODS,
+    PORT_RESOURCES = PORT_RESOURCES,
+}

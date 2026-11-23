@@ -1,0 +1,12 @@
+name: Feature request
+description: Suggest an improvement to Notes+.
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: What would you like Notes+ to do?
+      description: Describe the change and how you would use it.
+    validations:
+      required: true
