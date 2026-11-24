@@ -241,7 +241,8 @@ function Editor:MountTrackingEditor()
             if self.destroyed or self.draft ~= draft then return nil, "That note is no longer open." end
             draft.title, draft.text = self.titleField:GetText(), self.editor:GetText()
             local categoryID = draft.categoryID
-            if tracking and not draft.categoryChosen and (draft.index == nil or categoryID == 0) then
+            if tracking and not draft.categoryChosen
+                and (categoryID == 0 or (draft.index == nil and categoryTrackingType(self.data, categoryID))) then
                 categoryID = nil
                 for _, category in ipairs(self.data.categories) do
                     if category.name:lower() == tracking.category:lower() then categoryID = category.id break end
