@@ -186,9 +186,7 @@ function Panel:Navigate(name, payload)
     self:Render(true)
     if name == "edit" and self.activeView then
         if payload.action == "color" then self.activeView.picker:Open()
-        elseif payload.action == "delete" then
-            self.draft.confirmDelete = true
-            self.activeView:Status("Press Delete to remove this note.")
+        elseif payload.action == "delete" then self.activeView:ConfirmDelete()
         end
     end
 end

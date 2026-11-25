@@ -94,10 +94,11 @@ function PorterChat.Take()
     return totals
 end
 
--- Only the game's own messages count: the GENERAL channel (value 0, where "You catch a trout."), SPAM (109, where the Porter's bank lines
--- arrive) and ENGINE (4), and only when no player is named as the sender. Anything a player can type (public, private,
--- friends, clan, group, quick chat...) is ignored, so nobody can pass a fake "You transport to your bank: 20 x Raw trout."
--- line to someone else's goals.
+-- An interesting find from a public test, if you typed a message that replicated the Porter one, it'd increment the note.
+-- To fix this we need to ensure only the game's own messages count: the GENERAL channel (value 0, where "You catch a trout.")
+-- And then SPAM (109, where the Porter's bank lines arrive) and then to be safe, ENGINE (4)
+-- Where no player is named as the sender. Anything a player can type (public, private,
+-- friends, clan, group, quick chat...) is ignored.
 local GAME_CHANNELS = { GENERAL = 0, ENGINE = 4, SPAM = 109 }
 local SENDER_FIELDS = { "senderNameUnfiltered", "senderNameFiltered", "senderNameSimple" }
 

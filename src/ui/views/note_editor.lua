@@ -366,6 +366,23 @@ function Editor:SaveDraft()
     self:ShowList()
 end
 
+function Editor:ConfirmDelete()
+    local index = self.draft.index
+    local note = index and self.data.notes[index]
+    if not note or not self.deleteButton then return end
+    self:ConfirmNoteDeletion(self.deleteButton.root, function()
+        if self.data.notes[index] ~= note then self:Status("That note is no longer open."); return end
+        Notes.Delete(self.data, index)
+        local saved, message = self:Save()
+        if not saved then
+            table.insert(self.data.notes, index, note)
+            self:Status(message)
+            return
+        end
+        self:ShowList()
+    end)
+end
+
 function Editor:TransferDraft(view)
     if not self:FlushActionBar() then return end
     if not self:CommitTracking() then return end

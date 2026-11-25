@@ -1,9 +1,21 @@
 local Components = require("src/ui/shared/components")
 local Settings = require("src/core/settings")
 local WindowStyle = require("src/ui/window/window_style")
+local Overlay = require("src/ui/window/overlay")
 local Detached = require("src/ui/shared/detached_ui")
 
 local View = {}
+
+local function positionInParent(component, parent)
+    local point, base = component.xyGlobal, parent.xyGlobal
+    local x, y = point.x - base.x, point.y - base.y
+    local ancestor = component.parent
+    while ancestor and ancestor ~= parent do
+        x, y = x - (ancestor.scrollX or 0), y - (ancestor.scrollY or 0)
+        ancestor = ancestor.parent
+    end
+    return x, y
+end
 
 function View.Init(self, parent, options, callbacks)
     self.parent, self.window = options.parent, options.window
@@ -24,14 +36,7 @@ function View.Init(self, parent, options, callbacks)
         tooltipParent = self.tooltipOwner
     end
     local context = prettyui.Tooltip.registerContext(self.surface, tooltipParent, function(target)
-        local point, base = target.xyGlobal, self.parent.xyGlobal
-        local x, y = point.x - base.x, point.y - base.y
-        local ancestor = target.parent
-        while ancestor and ancestor ~= self.parent do
-            x, y = x - (ancestor.scrollX or 0), y - (ancestor.scrollY or 0)
-            ancestor = ancestor.parent
-        end
-        return x, y
+        return positionInParent(target, self.parent)
     end)
     context.ownerWindow = self.window.chrome
     return self
@@ -132,6 +137,55 @@ function View:ShowList() return self:Navigate("list") end
 function View:Edit(index, action) return self:Navigate("edit", {index = index, action = action}) end
 function View:EditCategory(categoryID) return self:Navigate("category", {id = categoryID}) end
 
+function View:CloseDeleteConfirmation(detached)
+    local confirmation = self.deleteConfirmation
+    if not confirmation then return end
+    self.deleteConfirmation = nil
+    if not detached then confirmation:Destroy(); return end
+    local window = confirmation.window
+    if not pcall(Detached.Window, window) then pcall(window.Destroy, window) end
+end
+
+function View:ConfirmNoteDeletion(anchor, onConfirm)
+    self:ConfirmDeletion(anchor, "Delete note", "Permanently delete this note?", onConfirm)
+end
+
+function View:ConfirmCategoryDeletion(anchor, onConfirm)
+    self:ConfirmDeletion(anchor, "Delete category", "Notes in this category will move to Uncategorized.", onConfirm)
+end
+
+function View:ConfirmDeletion(anchor, title, body, onConfirm)
+    if self.destroyed or self.clearing or self.deleteConfirmation then return end
+    local anchorX, anchorY = positionInParent(anchor, self.parent)
+    local function dismiss()
+        self.deleteConfirmation = nil
+        return true
+    end
+    prettyui.Tooltip.hideContextTooltips(self.surface)
+    self.deleteConfirmation = prettyui.Dialog.new(self.parent, Components.Options({
+        title = title,
+        content = function(window) window:AddText(body) end,
+        onDismiss = dismiss,
+        actions = {
+            {label = "Cancel", onClick = dismiss},
+            {label = "Delete", variant = "negative", onClick = function()
+                if self.destroyed or self.clearing then return true end
+                self:CloseDeleteConfirmation()
+                onConfirm()
+                return true
+            end}
+        }
+    }))
+    local window = self.deleteConfirmation.window
+    local root, gap = window.root, 8
+    local x = math.floor(anchorX + (anchor.width - root.width) / 2)
+    local y = anchorY + anchor.height + gap
+    if y + root.height > self.parent.height then y = anchorY - root.height - gap end
+    x, y = Overlay.Clamp(self.parent, x, y, root.width, root.height)
+    root:SetPos(x, y)
+    window:SetSize(root.width, root.height)
+end
+
 function View:CategoryEntries(includeAll)
     local counts, entries = {}, {}
     for _, note in ipairs(self.data.notes) do
@@ -170,6 +224,7 @@ end
 function View:Destroy(detached)
     if self.destroyed then return end
     self.destroyed, self.clearing, self.activeInput = true, true, nil
+    self:CloseDeleteConfirmation(detached)
     if self.tooltipOwner then self.window.chrome:_UnregisterOverlay(self.tooltipOwner) end
     if detached then Detached.Tooltips(self.surface) end
     self:DestroyControls(detached)

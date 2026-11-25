@@ -44,7 +44,7 @@ function Layout.Build(self)
         width = self.width, height = 38,
         onChange = function(_, _, value)
             if self.destroyed or self.clearing then return end
-            draft.name, draft.confirmDelete = value, false
+            draft.name = value
             self:Status("")
             self:RefreshCategoryAppearance()
         end
@@ -119,7 +119,7 @@ function Layout.Build(self)
     end, Components.Options({variant = "positive"})))
     self.saveButtonWidth, self.saveButtonHeight = self.saveButton.root.width, self.saveButton.root.height
     self.cancelButton = self:Button("Cancel", 0, 0, 80, function() self:ShowList() end)
-    if draft.id then self.deleteButton = self:Button("Delete", 0, 0, 80, function() self:DeleteCategory() end) end
+    if draft.id then self.deleteButton = self:Button("Delete", 0, 0, 80, function() self:ConfirmDelete() end) end
     self.categoryClipComponents = {self.categoryNameField.root, self.categoryNameFrame,
         self.categoryIconSlot.root, self.categorySpriteButton.root, self.categoryColorField.root,
         self.categoryColorPicker.root, self.categoryDefaultColorButton.root}

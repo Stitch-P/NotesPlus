@@ -456,7 +456,9 @@ function NoteList:RenderList()
         self.categorySidebar = CategorySidebar.new(self.surface, self.data, self.categoryID, {
             select = function(categoryID) self:SelectCategory(categoryID) end,
             edit = function(categoryID) self:EditCategory(categoryID) end,
-            delete = function(categoryID) self:DeleteCategory(categoryID) end,
+            delete = function(categoryID, anchor)
+                self:ConfirmCategoryDeletion(anchor, function() self:DeleteCategory(categoryID) end)
+            end,
             new = function() self:EditCategory(nil) end,
             reset = function() self:ResetCategories() end,
             reorder = function(categoryID, destination) return self:MoveCategory(categoryID, destination) end
@@ -550,8 +552,6 @@ function NoteList:SelectCategory(categoryID)
     end
 end
 
--- "Delete category" from the right-click menu: removes it straight away; its notes move to Uncategorized (nothing else is
--- lost). Put back as it was if the notes can't be saved.
 function NoteList:DeleteCategory(categoryID)
     if self.destroyed or self.clearing or self.view ~= "list" then return false end
     local category = Notes.FindCategory(self.data, categoryID)
@@ -655,7 +655,6 @@ function NoteList:ToggleSubject(row)
         return
     end
     self:SetSubjectExpanded(row, not row.expanded)
-    self.pendingDeleteNote = nil
     self:LayoutRows(scroll, true)
 end
 
@@ -853,20 +852,22 @@ function NoteList:LayoutRows(scroll, keepTracking)
     self:LayoutNoteHits()
 end
 
-function NoteList:DeleteRow(row)
-    if self.destroyed or self.clearing or self.noteRows[row.position] ~= row then return end
-    local note = row.note
-    if self.pendingDeleteNote ~= note then self.pendingDeleteNote = note; return end
+function NoteList:DeleteNote(note)
     for index, current in ipairs(self.data.notes) do
         if current == note then
             self.scroll = self.listScroll.scrollY
             Notes.Delete(self.data, index)
             if not self:Save(true) then table.insert(self.data.notes, index, note); return end
-            self.pendingDeleteNote = nil
             self:Render()
             return
         end
     end
+end
+
+function NoteList:DeleteRow(row)
+    if self.destroyed or self.clearing or self.noteRows[row.position] ~= row then return end
+    local note = row.note
+    self:ConfirmNoteDeletion(row.deleteButton.root, function() self:DeleteNote(note) end)
 end
 
 function NoteList:OpenRowAttachment(row, kind)
@@ -948,7 +949,7 @@ function NoteList:RenderRows()
     self.rowsReady, self.compactRecovery = false, false
     if self.noteDrag then self.noteDrag:Destroy(); self.noteDrag = nil end
     if self.cardPool then self.cardPool:Clear() end
-    self.pendingDeleteNote, self.pendingSubPage = nil, nil
+    self.pendingSubPage = nil
     self.capacityCost = Capacity.Estimate(self.data)
     if wasRecovery or self.capacityCost > Capacity.BUDGET then
         if self.cardPool then self.cardPool:Destroy(); self.cardPool = nil end
@@ -1055,6 +1056,7 @@ function NoteList:RenderRows()
 end
 
 function NoteList:AddContextMenu(miniMenu)
+    if self.deleteConfirmation then return end
     if not self.noteDrag and self.view == "list" and self.categorySidebar and self.categorySidebar:AddContextMenu(miniMenu) then return end
     if self.noteDrag or self.view ~= "list" or not self.listScroll or not self.noteHit then return end
     local x, y = Overlay.Mouse(self.listScroll.root)
@@ -1201,7 +1203,6 @@ function NoteList:Destroy(detached)
         self.listScroll = nil
     end
     self.noteRows, self.visibleNotes, self.noteHit = {}, nil, nil
-    self.pendingDeleteNote = nil
     Base.Destroy(self, detached)
 end
 

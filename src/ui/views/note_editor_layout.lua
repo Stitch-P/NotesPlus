@@ -246,22 +246,7 @@ function Layout.Build(self)
     self.copyButton = button("Copy", function() self:TransferDraft("copy") end)
     self.cancelButton = button("Cancel", function() self:ShowList() end)
     if draft.index then
-        self.deleteButton = button("Delete", function()
-            if not draft.confirmDelete then
-                draft.confirmDelete = true
-                self:Status("Press Delete again to remove this note.")
-            else
-                local note = self.data.notes[draft.index]
-                Notes.Delete(self.data, draft.index)
-                local saved, message = self:Save()
-                if not saved then
-                    table.insert(self.data.notes, draft.index, note)
-                    self:Status(message)
-                    return
-                end
-                self:ShowList()
-            end
-        end)
+        self.deleteButton = button("Delete", function() self:ConfirmDelete() end)
     end
     self.saveButton = self:Track(prettyui.FancyButton.new(self.surface, "Save Note", function()
         if not self.destroyed and not self.clearing then self:SaveDraft() end

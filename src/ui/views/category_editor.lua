@@ -59,13 +59,12 @@ function CategoryEditor:SaveDraft()
     self:ShowList()
 end
 
+function CategoryEditor:ConfirmDelete()
+    self:ConfirmCategoryDeletion(self.deleteButton.root, function() self:DeleteCategory() end)
+end
+
 function CategoryEditor:DeleteCategory()
     local draft = self.categoryDraft
-    if not draft.confirmDelete then
-        draft.confirmDelete = true
-        self:Status("Press Delete again. Notes will move to Uncategorized.")
-        return
-    end
     local category, position, notes = Notes.FindCategory(self.data, draft.id), nil, {}
     for index, existing in ipairs(self.data.categories) do
         if existing == category then position = index; break end

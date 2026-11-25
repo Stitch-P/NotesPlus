@@ -337,7 +337,7 @@ function Sidebar:AddContextMenu(miniMenu)
         end)
         if self.callbacks.delete then
             miniMenu:Add("Delete category", function()
-                if not self.destroyed and self.callbacks.delete then self.callbacks.delete(categoryID) end
+                if not self.destroyed and self.callbacks.delete then self.callbacks.delete(categoryID, row.root) end
             end)
         end
         return true
