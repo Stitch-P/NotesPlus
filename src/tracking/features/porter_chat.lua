@@ -94,13 +94,35 @@ function PorterChat.Take()
     return totals
 end
 
+-- Only the game's own messages count: the GENERAL channel (value 0, where "You catch a trout."), SPAM (109, where the Porter's bank lines
+-- arrive) and ENGINE (4), and only when no player is named as the sender. Anything a player can type (public, private,
+-- friends, clan, group, quick chat...) is ignored, so nobody can pass a fake "You transport to your bank: 20 x Raw trout."
+-- line to someone else's goals.
+local GAME_CHANNELS = { GENERAL = 0, ENGINE = 4, SPAM = 109 }
+local SENDER_FIELDS = { "senderNameUnfiltered", "senderNameFiltered", "senderNameSimple" }
+
+function PorterChat.IsGameMessage(event)
+    if event == nil or event.chatType == nil then return false end
+    for _, field in ipairs(SENDER_FIELDS) do
+        local okField, value = pcall(function() return event[field] end)
+        if okField and type(value) == "string" and value ~= "" then return false end
+    end
+    local kind = event.chatType
+    for name, number in pairs(GAME_CHANNELS) do
+        local okType, value = pcall(function() return ChatType[name] end)
+        if kind == number or okType and value ~= nil and kind == value then return true end
+        local okNumber, asNumber = pcall(tonumber, kind)
+        if okNumber and asNumber == number then return true end
+    end
+    return false
+end
+
 function PorterChat.Start()
     local ok, allowed = pcall(function() return Plugin.HasPermission(PluginPermissions.chatAccess) end)
     if not ok or not allowed then return false end
     return pcall(function()
         Event.ChatMessage.Subscribe(EVENT, function(event)
-            if event.chatType == ChatType.PLUGIN then return end
-            if type(event.chatMessage) == "string" then record(event.chatMessage) end
+            if PorterChat.IsGameMessage(event) and type(event.chatMessage) == "string" then record(event.chatMessage) end
         end)
     end)
 end
