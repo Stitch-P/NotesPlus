@@ -69,7 +69,7 @@ function Defaults.Apply(data, notes, restore)
     local defaults, wanted, existing, missing = {}, {}, {}, 0
     for _, tracking in ipairs(scheduledTemplates()) do
         local installed
-        if tracking.key == "scheduled-daily-challenges" or tracking.key == "scheduled-nemi-forest"
+        if tracking.key == "scheduled-nemi-forest"
             or tracking.key == "scheduled-meg" or tracking.key == "scheduled-tears-of-guthix"
             or tracking.key == "scheduled-agoroth" or tracking.key == "scheduled-troll-invasion"
             or tracking.key == "scheduled-soul-obelisks" or tracking.key == "scheduled-citadel" then

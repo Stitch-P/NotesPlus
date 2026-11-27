@@ -2616,7 +2616,7 @@ local allowedNames, rebuilds
 local VARIABLE_FIELDS = {varName = true, variable = true, var = true, vars = true, taskVars = true, owned = true,
     ownedVar = true, currencyVar = true, unlocked = true, acquired = true}
 -- Names the features build from game data at run time (prefix + row name + suffix); each must also resolve to a real variable.
-local FAMILIES = {"^INVENT_BLUEPRINT_UNLOCKED_%d+$", "^OMGE_CHALLENGE_CURRENT_[A-Z_]+_%d+$", "^ARCH_RELIC_[A-Z0-9_]+_UNLOCKED$",
+local FAMILIES = {"^INVENT_BLUEPRINT_UNLOCKED_%d+$", "^ARCH_RELIC_[A-Z0-9_]+_UNLOCKED$",
     "^ARCH_RELIC_[A-Z0-9_]+_ACQUIRED$", "^PLAYER_FORT_[A-Z0-9_]+$", "^DINO_BASE_CAMP_[A-Z0-9_]+$",
     "^COMBATV2_ABILITY_NECROMANCY_[A-Z0-9_]+_UNLOCKED$", "^RAND_[A-Z0-9_]+_FASTEST_TIME[A-Z_]*$",
     "^TRH103_WARPED_[A-Z0-9_]+_OWNED$", "^WOODCUTTING_WOODBOX_[A-Z0-9_]+$", "^SKILL_[A-Z0-9_]+$",

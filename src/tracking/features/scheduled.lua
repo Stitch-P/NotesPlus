@@ -12,7 +12,6 @@ local Nemi = require("src/tracking/features/nemi_forest")
 local Agoroth = require("src/tracking/features/agoroth")
 local Tears = require("src/tracking/features/tears_of_guthix")
 local TrollInvasion = require("src/tracking/features/troll_invasion")
-local Challenges = require("src/tracking/features/daily_challenges")
 local Meg = require("src/tracking/features/meg")
 
 local Scheduled = {}
@@ -79,9 +78,6 @@ definitions[#definitions + 1] = tears
 local trollInvasion = TrollInvasion.info()
 trollInvasion.readProgress = TrollInvasion.progress
 definitions[#definitions + 1] = trollInvasion
-local challenges = Challenges.info()
-challenges.readProgress = Challenges.progress
-definitions[#definitions + 1] = challenges
 local meg = Meg.info()
 meg.readProgress = Meg.progress
 definitions[#definitions + 1] = meg
@@ -191,7 +187,6 @@ function Scheduled.options(group)
 end
 
 function Scheduled.items(key)
-    if key == "scheduled-daily-challenges" then return Challenges.items() end
     local definition = byKey[key]
     if not definition or not definition.entries then return nil end
     if itemLists[key] then return itemLists[key] end
@@ -211,7 +206,6 @@ local function entryFor(item)
 end
 
 function Scheduled.readItem(item)
-    if item and item.scheduleKey == "scheduled-daily-challenges" then return Challenges.readItem(item) end
     local entry = entryFor(item)
     if not entry then return nil end
     if entry.quest then
@@ -231,13 +225,11 @@ function Scheduled.object(item)
 end
 
 function Scheduled.sprite(item)
-    if item and item.scheduleKey == "scheduled-daily-challenges" then return Challenges.sprite(item) end
     local entry = entryFor(item)
     return entry and entry.spriteName and Sprites.spriteByName(entry.spriteName) or nil
 end
 
 function Scheduled.label(item)
-    if item and item.scheduleKey == "scheduled-daily-challenges" then return Challenges.label(item) end
     local entry = entryFor(item)
     if not entry then return item and item.label end
     local reason = entry.quest and Access.Quest(entry.quest, entry.requirement)
@@ -245,7 +237,6 @@ function Scheduled.label(item)
 end
 
 function Scheduled.card(item)
-    if item and item.scheduleKey == "scheduled-daily-challenges" then return Challenges.card(item) end
     local entry = entryFor(item)
     if not entry then return nil end
     local body = entry.name
@@ -330,7 +321,6 @@ end
 function Scheduled.Clear()
     itemLists, cachedDay, cachedCalendar = {}, nil, nil
     Citadel.Clear()
-    Challenges.Clear()
 end
 
 return Scheduled

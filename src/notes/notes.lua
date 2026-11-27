@@ -241,6 +241,10 @@ local function validNote(note)
         and validCategoryID(note.categoryID)
 end
 
+local function isRetiredDailyChallenge(tracking)
+    return type(tracking) == "table" and tracking.category == "Scheduled" and tracking.key == "scheduled-daily-challenges"
+end
+
 local function readNote(saved)
     if type(saved) ~= "table" then return nil end
     local skill = saved.skill
@@ -249,7 +253,7 @@ local function readNote(saved)
         subjectExpanded = saved.subjectExpanded, categoryID = saved.categoryID == nil and 0 or saved.categoryID,
         notifyChat = saved.notifyChat ~= nil and saved.notifyChat or false,
         notifyPopup = saved.notifyPopup ~= nil and saved.notifyPopup or false}
-    if saved.tracking ~= nil then
+    if saved.tracking ~= nil and not isRetiredDailyChallenge(saved.tracking) then
         note.tracking = Tracking.Normalize(saved.tracking)
         if note.tracking == nil then return nil end
     end
@@ -653,6 +657,7 @@ local function decodeTracking(text)
     if tracking.key == nil and tracking.variable ~= nil and (tracking.ownedVar or tracking.variable) ~= "" then
         tracking.key = tracking.ownedVar or tracking.variable
     end
+    if isRetiredDailyChallenge(tracking) then return nil end
     if tracking.varId == nil then tracking.varId = resolvedID(tracking.variable) end
     if tracking.items then
         for _, item in ipairs(tracking.items) do item.category, item.group = tracking.category, tracking.group end
